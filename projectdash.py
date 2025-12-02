@@ -26,8 +26,8 @@ import plotly.express as px
 # ===============================
 # LOAD DATA
 # ===============================
-file_path = "/Users/joseph/Downloads/marketing_campaign_cleaned.xlsx"
-df = pd.read_excel(file_path)
+df = pd.read_excel("marketing_campaign_cleaned.xlsx")
+
 
 # ===============================
 # SIDEBAR FILTERS
