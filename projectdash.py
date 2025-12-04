@@ -1,10 +1,5 @@
-
 """
 ISTM 635 – Project 2
-Interactive Marketing Dashboard – Streamlit + Plotly
-
-This script loads the cleaned marketing campaign dataset and builds
-a fully linked, multi-visual interactive dashboard. It includes:
 
 - 4+ business-focused visualizations
 - Sidebar filters (Age, Education, Marital Status, Income Range)
@@ -12,22 +7,14 @@ a fully linked, multi-visual interactive dashboard. It includes:
 - Student-generated enhancements (labeled clearly)
 - Fully auto-updating (all charts respond to filters)
 
-Author: Joseph (Student)
 Dataset: marketing_campaign_cleaned.xlsx
 """
 
-# ===============================
-# IMPORTS
-# ===============================
 import streamlit as st
 import pandas as pd
 import plotly.express as px
 
-# ===============================
-# LOAD DATA
-# ===============================
 df = pd.read_excel("marketing_campaign_cleaned.xlsx")
-
 
 # ===============================
 # SIDEBAR FILTERS
@@ -69,7 +56,6 @@ filtered_df = df[
 ]
 
 st.title("📊 Marketing Campaign Interactive Dashboard")
-
 st.write(f"### Dataset after filtering: {len(filtered_df)} customers")
 
 # ===================================================================
@@ -82,27 +68,30 @@ fig_bar = px.bar(filtered_df.groupby("Education")["TotalSpent"].mean().reset_ind
                  y="TotalSpent",
                  title="Average Total Spending by Education")
 
-# ---- AI-GENERATED ENHANCEMENT (from Copilot suggestion) ----
-# Add color scale based on spending
+# ---- AI-GENERATED ENHANCEMENT ----
 fig_bar.update_traces(marker=dict(color=filtered_df.groupby("Education")["TotalSpent"].mean(),
                                   colorscale="Blues"))
-# -------------------------------------------------------------
 
 # ---- STUDENT-GENERATED ENHANCEMENT ----
-# Add data labels on top of bars
 fig_bar.update_traces(texttemplate='%{y:.2f}', textposition='outside')
-# ----------------------------------------
 
 st.plotly_chart(fig_bar, use_container_width=True)
+
+# === Enhancement Info Box ===
+with st.expander("Enhancements for Bar Chart"):
+    st.write("**AI Enhancement:** Automatic color scale applied based on TotalSpent.")
+    st.write("**Student Enhancement:** Data labels added above each bar for readability.")
 
 # ===================================================================
 # VISUALIZATION 2 – Line Chart: Total Purchases by Age
 # ===================================================================
 st.subheader("2. Total Purchases by Age")
 
-filtered_df["TotalPurchases"] = (filtered_df["NumWebPurchases"] +
-                                 filtered_df["NumStorePurchases"] +
-                                 filtered_df["NumCatalogPurchases"])
+filtered_df["TotalPurchases"] = (
+    filtered_df["NumWebPurchases"] +
+    filtered_df["NumStorePurchases"] +
+    filtered_df["NumCatalogPurchases"]
+)
 
 fig_line = px.line(
     filtered_df.groupby("Age")["TotalPurchases"].mean().reset_index(),
@@ -112,21 +101,24 @@ fig_line = px.line(
 )
 
 # ---- AI-GENERATED ENHANCEMENT ----
-# Add a smoothing line trend
 fig_line.update_traces(line_shape="spline")
-# -----------------------------------
 
 # ---- STUDENT-GENERATED ENHANCEMENT ----
-# Highlight the highest purchase point
 peak_age = filtered_df.groupby("Age")["TotalPurchases"].mean().idxmax()
 peak_value = filtered_df.groupby("Age")["TotalPurchases"].mean().max()
-fig_line.add_scatter(x=[peak_age], y=[peak_value],
-                     mode="markers+text",
-                     text=["Peak"],
-                     marker=dict(size=12, color="red"))
-# ---------------------------------------
+fig_line.add_scatter(
+    x=[peak_age], 
+    y=[peak_value],
+    mode="markers+text",
+    text=["Peak"],
+    marker=dict(size=12, color="red")
+)
 
 st.plotly_chart(fig_line, use_container_width=True)
+
+with st.expander("Enhancements for Line Chart"):
+    st.write("**AI Enhancement:** Smooth spline line for better visual interpretation.")
+    st.write("**Student Enhancement:** Highlighted the peak purchase age with a red marker.")
 
 # ===================================================================
 # VISUALIZATION 3 – Donut Chart: Marital Status Distribution
@@ -145,16 +137,16 @@ fig_donut = px.pie(
 )
 
 # ---- AI-GENERATED ENHANCEMENT ----
-# add percentage formatting
 fig_donut.update_traces(textposition="inside", textinfo="percent+label")
-# -----------------------------------
 
 # ---- STUDENT-GENERATED ENHANCEMENT ----
-# Add custom colors for aesthetic consistency
 fig_donut.update_traces(marker=dict(colors=['#FF9999', '#66B2FF', '#99FF99', '#FFCC66']))
-# ----------------------------------------
 
 st.plotly_chart(fig_donut, use_container_width=True)
+
+with st.expander("Enhancements for Donut Chart"):
+    st.write("**AI Enhancement:** Added percentage labels inside each slice.")
+    st.write("**Student Enhancement:** Applied custom color palette for visual clarity.")
 
 # ===================================================================
 # VISUALIZATION 4 – Scatter Plot: Income vs Total Spending
@@ -167,21 +159,11 @@ fig_scatter = px.scatter(
     y="TotalSpent",
     color="Education",
     title="Income vs Total Spending (Colored by Education)",
-    opacity=0.7
+    opacity=0.7,
+    trendline="ols"
 )
 
-# ---- AI-GENERATED ENHANCEMENT ----
-# Add regression trendline
-fig_scatter = px.scatter(filtered_df,
-                         x="Income",
-                         y="TotalSpent",
-                         color="Education",
-                         opacity=0.7,
-                         trendline="ols")
-# -----------------------------------
-
 # ---- STUDENT-GENERATED ENHANCEMENT ----
-# Add hover tooltips with detailed information
 fig_scatter.update_traces(
     hovertemplate="<br>".join([
         "Income: %{x}",
@@ -189,11 +171,9 @@ fig_scatter.update_traces(
         "Education: %{marker.color}"
     ])
 )
-# ---------------------------------------
 
 st.plotly_chart(fig_scatter, use_container_width=True)
 
-# ===================================================================
-# END OF DASHBOARD
-# ===================================================================
-
+with st.expander("Enhancements for Scatter Plot"):
+    st.write("**AI Enhancement:** Added regression trendline (OLS) to show spending pattern.")
+    st.write("**Student Enhancement:** Custom hover tooltip with detailed information.")
