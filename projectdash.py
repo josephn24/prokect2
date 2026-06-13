@@ -11,38 +11,165 @@ st.set_page_config(
 # Load data
 df = pd.read_excel("marketing_campaign_cleaned.xlsx")
 
-# ── Header ────────────────────────────────────────────────────────────────────
+# ── Styles ────────────────────────────────────────────────────────────────────
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&display=swap');
 html, body, [class*="css"] { font-family: 'DM Sans', sans-serif; }
+
 .hero {
     background: linear-gradient(135deg, #f0f4ff 0%, #fafafa 100%);
     border: 1px solid #e0e7ff;
     border-left: 4px solid #2563eb;
     border-radius: 12px;
     padding: 1.4rem 1.8rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
 }
 .hero h1 { font-size: 1.6rem; font-weight: 700; color: #111; margin: 0 0 0.4rem 0; }
 .hero p  { font-size: 0.88rem; color: #555; line-height: 1.7; margin: 0; }
 .hero .meta { font-size: 0.75rem; color: #888; margin-top: 0.6rem; }
 .hero .meta b { color: #2563eb; }
-</style>
 
+.about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1rem;
+}
+.about-card {
+    background: #f8faff;
+    border: 1px solid #e0e7ff;
+    border-radius: 12px;
+    padding: 1.2rem 1.5rem;
+}
+.about-label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #2563eb;
+    margin-bottom: 0.6rem;
+}
+.about-text {
+    font-size: 0.84rem;
+    color: #444;
+    line-height: 1.8;
+    margin: 0;
+}
+.about-text b { color: #111; }
+
+.tab-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+}
+.tab-item {
+    font-size: 0.82rem;
+    color: #555;
+    line-height: 1.6;
+}
+.tab-item span {
+    color: #2563eb;
+    font-weight: 700;
+}
+
+.meta-strip {
+    background: #f8faff;
+    border: 1px solid #e0e7ff;
+    border-radius: 12px;
+    padding: 0.9rem 1.5rem;
+    margin-bottom: 1.6rem;
+    display: flex;
+    gap: 2.5rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+.meta-item-label {
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #aab;
+    margin-bottom: 0.2rem;
+}
+.meta-item-value {
+    font-size: 0.82rem;
+    color: #444;
+}
+</style>
+""", unsafe_allow_html=True)
+
+# ── Hero ─────────────────────────────────────────────────────────────────────
+st.markdown("""
 <div class="hero">
   <h1>📊 Customer Behavior & Marketing Campaign Dashboard</h1>
   <p>
-    This dashboard explores customer purchasing behavior and campaign response patterns
-    for a retail company across <b>2,237 customers</b>. The dataset covers demographics
-    (age, education, income, marital status), spending across product categories
-    (wine, meat, fish, sweets, gold), and purchase channels (web, store, catalog).
-    Use the sidebar filters to segment customers and explore trends.
+    Retail customer analytics dashboard exploring purchasing behavior, campaign response patterns,
+    and demographic-driven spending across <b>2,237 customers</b>.
   </p>
   <div class="meta">
     <b>Dataset:</b> Customer Marketing Campaign &nbsp;·&nbsp;
     <b>Customers:</b> 2,237 &nbsp;·&nbsp;
     <b>Variables:</b> Demographics, Spending, Channels, Campaign Response
+  </div>
+</div>
+""", unsafe_allow_html=True)
+
+# ── About Panel ───────────────────────────────────────────────────────────────
+st.markdown("""
+<div class="about-grid">
+  <div class="about-card">
+    <div class="about-label">What This Dashboard Analyzes</div>
+    <p class="about-text">
+      This dashboard explores how <b>demographics, income, and education</b> shape purchasing behavior
+      across a retail customer base of <b>2,237 people</b>. It breaks down spending across product
+      categories — wine, meat, fish, sweets, and gold — and tracks how customers engage across
+      three purchase channels: <b>web, in-store, and catalog</b>.<br><br>
+      The goal is to surface which customer segments spend the most, which channels they prefer,
+      and where marketing campaigns are most likely to land — giving a marketing or analytics team
+      a clear picture of where to focus acquisition and retention efforts.
+    </p>
+  </div>
+  <div class="about-card">
+    <div class="about-label">How To Use It</div>
+    <p class="about-text" style="margin-bottom: 0.7rem;">
+      Use the <b>sidebar filters</b> to slice the data by age range, income range, education level,
+      and marital status. All charts update in real time to reflect your selected segment.
+    </p>
+    <div class="tab-row">
+      <div class="tab-item"><span>KPI Row</span> — Live counts of customers, average income, average total spend, and average age for the filtered segment.</div>
+      <div class="tab-item"><span>Chart 1</span> — Average spending by education level, with a dotted average benchmark line to spot above/below-average groups.</div>
+      <div class="tab-item"><span>Chart 2</span> — Total purchases (web + store + catalog) by customer age, with the peak purchase age annotated.</div>
+      <div class="tab-item"><span>Chart 3</span> — Marital status breakdown as a donut chart for the filtered segment.</div>
+      <div class="tab-item"><span>Chart 4</span> — Income vs. total spending scatter plot, colored by education level, with an OLS trend line.</div>
+    </div>
+  </div>
+</div>
+
+<div class="meta-strip">
+  <div>
+    <div class="meta-item-label">Dataset</div>
+    <div class="meta-item-value">Customer Marketing Campaign</div>
+  </div>
+  <div>
+    <div class="meta-item-label">Customers</div>
+    <div class="meta-item-value">2,237</div>
+  </div>
+  <div>
+    <div class="meta-item-label">Analysis Type</div>
+    <div class="meta-item-value">Demographic segmentation · Channel attribution</div>
+  </div>
+  <div>
+    <div class="meta-item-label">Key Metrics</div>
+    <div class="meta-item-value">Avg spend · Purchase volume · Income correlation</div>
+  </div>
+  <div>
+    <div class="meta-item-label">Tools</div>
+    <div class="meta-item-value">Python · Streamlit · Plotly · Pandas</div>
+  </div>
+  <div>
+    <div class="meta-item-label">Built By</div>
+    <div class="meta-item-value">Joseph Nagothu · Analytics Portfolio</div>
   </div>
 </div>
 """, unsafe_allow_html=True)
